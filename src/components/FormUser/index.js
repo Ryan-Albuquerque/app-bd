@@ -20,6 +20,8 @@ function FormUser({props}) {
         e.preventDefault();
 
         try {
+            user.phoneContacts = [user.phoneContacts0, user.phoneContacts1]
+
             const response = await api.post('/user', user);
 
             Notification(Constants.Notification.types.success, response.data.message);
@@ -43,6 +45,7 @@ function FormUser({props}) {
         e.preventDefault();
 
         try {
+            user.phoneContacts = [user.phoneContacts0, user.phoneContacts1]
             const response = await api.patch(`/user/${user._id}`, user);
 
             Notification(Constants.Notification.types.success, response.data.message);
@@ -62,6 +65,7 @@ function FormUser({props}) {
         const fecthData = async () =>{
             try {
                 const response = await api.get(`/user/${props.match.params.id}`);
+
                 response.data.user.bornDate = moment(response.data.user.bornDate);
 
                 let year = response.data.user.bornDate.year();
@@ -77,6 +81,10 @@ function FormUser({props}) {
                 } 
 
                 response.data.user.bornDate = `${year}-${month}-${day}`
+
+                response.data.user.phoneContacts0 = response.data.user.phoneContacts[0];
+                response.data.user.phoneContacts1 = response.data.user.phoneContacts[1];
+
                 setUser(response.data.user)
             } catch (error) {
                 const message = getErrorMessage(error)
@@ -110,10 +118,17 @@ function FormUser({props}) {
                     <Form.Label>Email</Form.Label>
                     <Form.Control type="email" placeholder="joao@gmail.com" onChange={(e)=>setUser({...user, email: e.target.value})} disabled={!edit && !props.isNew} defaultValue={user.email}/>
                 </Form.Group>
-                <Form.Group className="py-2 w-25">
-                    <Form.Label>Telefone de Contato</Form.Label>
-                    <Form.Control type="text" placeholder="9299999999" onChange={(e)=>setUser({...user, phoneContacts: [e.target.value]})} disabled={!edit && !props.isNew} defaultValue={user.phoneContacts}/>
-                </Form.Group>
+                <Row>
+                    <Form.Group className="py-2 w-25">
+                        <Form.Label>Telefone de Contato</Form.Label>
+                        <Form.Control type="text" placeholder="9233333333" onChange={(e)=>setUser({...user, phoneContacts0: e.target.value})} disabled={!edit && !props.isNew} defaultValue={user.phoneContacts0}/>
+                    </Form.Group>
+                    <Form.Group className="py-2 w-25">
+                        <Form.Label>Celular para Contato</Form.Label>
+                        <Form.Control type="text" placeholder="92999999999" onChange={(e)=>setUser({...user, phoneContacts1: e.target.value})} disabled={!edit && !props.isNew} defaultValue={user.phoneContacts1}/>
+                    </Form.Group>
+
+                </Row>
                 <Form.Group className="py-2 w-25">
                     <Form.Label>CEP</Form.Label>
                     <Form.Control type="number" placeholder="69073630" onChange={(e)=>setUser({...user, cep: e.target.value})} disabled={!edit && !props.isNew} defaultValue={user.cep}/>
