@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-import config from '../config';
-
 const api = axios.create({
-    baseURL: config.apiUrl
+    baseURL: "https://api-bemoldigital.herokuapp.com"
 });
 
 export const getErrorMessage = (error) => {
